@@ -13,7 +13,8 @@ def home(request):
     })
 
 
-def products(request):
+def products(request, cid=None):
+    print(cid)
     with open('products/fixtures/products.json', 'r') as f:
         products = Product.objects.all()
 
