@@ -15,10 +15,15 @@ def home(request):
 
 def products(request, cid=None):
     print(cid)
-    with open('products/fixtures/products.json', 'r') as f:
-        products = Product.objects.all()
+    if not cid:
+        goods = Product.objects.all()
+    else:
+        goods = Product.objects.filter(category=cid)
+    categories = Category.objects.all()
 
     return render(request, 'products/products.html', context={
         'head': {'descr': '', 'author': '', 'title': ' - Каталог', 'custom_css': 'css/products.css'},
-        'products': products
+        'products': goods,
+        'categories': categories,
+        'selected_category': cid or 0
     })
