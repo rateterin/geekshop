@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from django.contrib.auth.models import User
+from authapp.models import ShopUser
 from django.core.management import call_command
 import os
 import re
@@ -19,4 +19,4 @@ class Command(BaseCommand):
         for file in file_list:
             call_command('loaddata', file[:-5])
 
-        super_user = User.objects.create_superuser('django', 'django@geekshop.local', 'geekbrains')
+        super_user = ShopUser.objects.create_superuser('django', 'django@geekshop.local', 'geekbrains', age=42)
