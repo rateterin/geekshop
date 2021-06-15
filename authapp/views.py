@@ -6,8 +6,8 @@ from django.urls import reverse
 
 
 def login(request):
-    login_form = ShopUserLoginForm(data=request.POST)
     if request.method == 'POST':
+        login_form = ShopUserLoginForm(data=request.POST)
         if login_form.is_valid():
             username = request.POST['username']
             password = request.POST['password']
@@ -15,10 +15,9 @@ def login(request):
             if user and user.is_active:
                 auth.login(request, user)
                 return HttpResponseRedirect(reverse('home'))
-        else:
-            print(login_form.errors)
-
-    context = {'title': 'вход',
+    else:
+        login_form = ShopUserLoginForm()
+    context = {'title': 'Вход',
                'div_wrap_class': 'col-lg-5',
                'h3_title': 'Авторизация',
                'form': login_form,
@@ -33,15 +32,12 @@ def logout(request):
 
 
 def register(request):
-    title = 'Регистрация'
-
     if request.method == 'POST':
         register_form = ShopUserRegisterForm(request.POST, request.FILES)
         if register_form.is_valid():
             register_form.save()
+            messages.success(request, 'Вы успешно зарегистрировались!')
             return HttpResponseRedirect(reverse('authapp:login'))
-        else:
-            print(register_form.errors)
     else:
         register_form = ShopUserRegisterForm()
 
