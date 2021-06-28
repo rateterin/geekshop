@@ -1,7 +1,7 @@
 from django.shortcuts import render, HttpResponseRedirect
-from authapp.forms import ShopUserLoginForm
-from authapp.forms import ShopUserRegisterForm
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserProfileForm
 from django.contrib import auth, messages
+from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
 
@@ -17,12 +17,13 @@ def login(request):
                 return HttpResponseRedirect(reverse('home'))
     else:
         login_form = ShopUserLoginForm()
-    context = {'title': 'Вход',
-               'div_wrap_class': 'col-lg-5',
-               'h3_title': 'Авторизация',
-               'form': login_form,
-               'form_link': 'authapp:register',
-               'form_link_text': 'Нужен аккаунт? Зарегистрируйся!'}
+    context = {
+        'head': {'descr': '', 'author': '', 'title': ' - Вход', 'custom_css': 'css/auth-admin.css'},
+        'div_wrap_class': 'col-lg-5',
+        'h3_title': 'Авторизация',
+        'form': login_form,
+        'form_link': 'authapp:register',
+        'form_link_text': 'Нужен аккаунт? Зарегистрируйся!'}
     return render(request, 'authapp/login.html', context=context)
 
 
@@ -33,7 +34,7 @@ def logout(request):
 
 def register(request):
     if request.method == 'POST':
-        register_form = ShopUserRegisterForm(request.POST, request.FILES)
+        register_form = ShopUserRegisterForm(data=request.POST, files=request.FILES)
         if register_form.is_valid():
             register_form.save()
             messages.success(request, 'Вы успешно зарегистрировались!')
@@ -41,14 +42,29 @@ def register(request):
     else:
         register_form = ShopUserRegisterForm()
 
-    context = {'title': 'Регистрация',
-               'div_wrap_class': 'col-lg-7',
-               'form': register_form,
-               'h3_title': 'Создать аккаунт',
-               'form_link': 'authapp:login',
-               'form_link_text': 'Уже есть аккаунт? Авторизоваться'}
+    context = {
+        'head': {'descr': '', 'author': '', 'title': ' - Регистрация', 'custom_css': 'css/auth-admin.css'},
+        'div_wrap_class': 'col-lg-7',
+        'form': register_form,
+        'h3_title': 'Создать аккаунт',
+        'form_link': 'authapp:login',
+        'form_link_text': 'Уже есть аккаунт? Авторизоваться'}
     return render(request, 'authapp/register.html', context=context)
 
 
+@login_required
 def profile(request):
-    return HttpResponseRedirect(reverse('home'))
+    if request.method == 'POST':
+        profile_form = ShopUserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
+        if profile_form.is_valid():
+            profile_form.save()
+            return HttpResponseRedirect(reverse('authapp:profile'))
+    else:
+        profile_form = ShopUserProfileForm(instance=request.user)
+
+    context = {
+        'head': {'descr': '', 'author': '', 'title': ' - Профиль', 'custom_css': 'css/profile.css'},
+        'div_wrap_class': 'col-lg-7',
+        'form': profile_form,
+    }
+    return render(request, 'authapp/profile.html', context=context)

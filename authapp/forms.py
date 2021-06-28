@@ -1,5 +1,4 @@
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
 from django import forms
 
 from .models import ShopUser
@@ -46,7 +45,7 @@ class ShopUserRegisterForm(UserCreationForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field_name, field in self.fields.items():
-            field.widget.attrs['class'] = 'form-control'
+            field.widget.attrs['class'] = 'form-control py-4'
             field.help_text = ''
 
     def clean_age(self):
@@ -54,3 +53,22 @@ class ShopUserRegisterForm(UserCreationForm):
         if data < 18:
             raise forms.ValidationError('Вы слишком молоды!')
         return data
+
+
+class ShopUserProfileForm(UserChangeForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4', 'readonly': True}))
+    email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control py-4', 'readonly': True}))
+    first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4'}))
+    last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control py-4'}))
+    avatar = forms.ImageField(widget=forms.FileInput(attrs={'class': 'custom-file-input'}), required=False)
+
+    class Meta:
+        model = ShopUser
+        fields = ('first_name', 'last_name', 'username', 'email', 'avatar')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name, field in self.fields.items():
+            if field_name != 'avatar':
+                field.widget.attrs['class'] = 'form-control py-4'
+                field.help_text = ''
