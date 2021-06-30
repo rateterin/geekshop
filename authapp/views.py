@@ -4,6 +4,7 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from baskets.models import Basket
+from functools import reduce
 
 
 def login(request):
@@ -68,5 +69,12 @@ def profile(request):
         'div_wrap_class': 'col-lg-7',
         'form': profile_form,
         'baskets': Basket.objects.filter(user=request.user),
+        'total': reduce(lambda a, b: a + b,
+                        [basket.quantity for basket in Basket.objects.filter(user=request.user)],
+                        0),
+        'total_sum': reduce(lambda a, b: a + b,
+                            [basket.product.price * basket.quantity
+                             for basket in Basket.objects.filter(user=request.user)],
+                            0)
     }
     return render(request, 'authapp/profile.html', context=context)
