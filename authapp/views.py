@@ -3,6 +3,7 @@ from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserProfi
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+from baskets.models import Basket
 
 
 def login(request):
@@ -66,5 +67,6 @@ def profile(request):
         'head': {'descr': '', 'author': '', 'title': ' - Профиль', 'custom_css': 'css/profile.css'},
         'div_wrap_class': 'col-lg-7',
         'form': profile_form,
+        'baskets': Basket.objects.filter(user=request.user),
     }
     return render(request, 'authapp/profile.html', context=context)
