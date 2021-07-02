@@ -2,6 +2,7 @@ from django.db import models
 
 from authapp.models import ShopUser
 from products.models import Product
+from functools import reduce
 
 
 class Basket(models.Model):
@@ -15,3 +16,11 @@ class Basket(models.Model):
 
     def sum(self):
         return self.product.price * self.quantity
+
+    @property
+    def total(self):
+        return reduce(lambda a, b: a + b, [basket.quantity for basket in Basket.objects.filter(user=self.user)], 0)
+
+    @property
+    def total_sum(self):
+        return sum(basket.sum() for basket in Basket.objects.filter(user=self.user))
