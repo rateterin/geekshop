@@ -3,17 +3,21 @@ from django.urls import reverse
 from django.contrib import messages
 from authapp.models import ShopUser
 from adm.forms import AdmUserCreationForm, AdmUserUpdateForm
+from django.contrib.auth.decorators import user_passes_test
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def index(request):
     return render(request, 'adm/admin.html')
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def adm_users(request):
     context = {'users': ShopUser.objects.all()}
     return render(request, 'adm/admin-users-read.html', context=context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def adm_users_create(request):
     if request.method == 'POST':
         form = AdmUserCreationForm(data=request.POST, files=request.FILES)
@@ -33,6 +37,7 @@ def adm_users_create(request):
     return render(request, 'adm/admin-users-create.html', context=context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def adm_users_update(request, id):
     user_for_update = ShopUser.objects.get(id=id)
     if request.method == 'POST':
@@ -51,6 +56,7 @@ def adm_users_update(request, id):
         return render(request, 'adm/admin-users-update-delete.html', context=context)
 
 
+@user_passes_test(lambda u: u.is_superuser)
 def adm_users_delete(request, id):
     user = ShopUser.objects.get(id=id)
     user.is_active = False
