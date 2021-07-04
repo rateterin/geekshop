@@ -14,7 +14,6 @@ def home(request):
 
 
 def products(request, cid=None):
-    print(cid)
     if not cid:
         goods = Product.objects.all()
     else:

@@ -64,17 +64,12 @@ def profile(request):
     else:
         profile_form = ShopUserProfileForm(instance=request.user)
 
+    baskets = Basket.objects.filter(user=request.user)
+
     context = {
         'head': {'descr': '', 'author': '', 'title': ' - Профиль', 'custom_css': 'css/profile.css'},
         'div_wrap_class': 'col-lg-7',
         'form': profile_form,
         'baskets': Basket.objects.filter(user=request.user),
-        'total': reduce(lambda a, b: a + b,
-                        [basket.quantity for basket in Basket.objects.filter(user=request.user)],
-                        0),
-        'total_sum': reduce(lambda a, b: a + b,
-                            [basket.product.price * basket.quantity
-                             for basket in Basket.objects.filter(user=request.user)],
-                            0)
     }
     return render(request, 'authapp/profile.html', context=context)
