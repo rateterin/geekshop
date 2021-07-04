@@ -28,7 +28,7 @@ class ShopUserRegisterForm(UserCreationForm):
     username = forms.CharField(widget=forms.TextInput(attrs={
         'class': 'form-control py-4', 'placeholder': 'Введите имя пользователя'}), required=True)
     password1 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control py-4', 'placeholder': 'Введите пароль'}), required=True)
+        'class': 'form-control py-4', 'placeholder': 'Введите пароль'}), required=True, )
     password2 = forms.CharField(widget=forms.PasswordInput(attrs={
         'class': 'form-control py-4', 'placeholder': 'Подтвердите пароль'}))
     email = forms.EmailField(widget=forms.EmailInput(attrs={
