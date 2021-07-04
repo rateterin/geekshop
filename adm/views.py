@@ -52,4 +52,7 @@ def adm_users_update(request, id):
 
 
 def adm_users_delete(request, id):
-    pass
+    user = ShopUser.objects.get(id=id)
+    user.is_active = False
+    user.save()
+    return HttpResponseRedirect(reverse('adm:users_read'))
