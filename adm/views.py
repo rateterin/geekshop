@@ -2,7 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse
 from django.contrib import messages
 from authapp.models import ShopUser
-from adm.forms import AdmUserCreationForm
+from adm.forms import AdmUserCreationForm, AdmUserUpdateForm
 
 
 def index(request):
@@ -34,7 +34,21 @@ def adm_users_create(request):
 
 
 def adm_users_update(request, id):
-    return render(request, 'adm/admin-users-update-delete.html')
+    user_for_update = ShopUser.objects.get(id=id)
+    if request.method == 'POST':
+        form = AdmUserUpdateForm(data=request.POST, files=request.FILES, instance=user_for_update)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('adm:users_read'))
+    else:
+        form = AdmUserUpdateForm(instance=user_for_update)
+        context = {
+            'head': {'descr': '', 'author': '', 'title': ' - Профиль', 'custom_css': 'css/profile.css'},
+            'div_wrap_class': 'col-lg-7',
+            'form': form,
+            'user_for_update': user_for_update,
+        }
+        return render(request, 'adm/admin-users-update-delete.html', context=context)
 
 
 def adm_users_delete(request, id):

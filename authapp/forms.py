@@ -1,4 +1,5 @@
-from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
+from adm.forms import AdmUserCreationForm
 from django import forms
 
 from .models import ShopUser
@@ -20,23 +21,9 @@ class ShopUserLoginForm(AuthenticationForm):
             field.widget.attrs['class'] = 'form-control'
 
 
-class ShopUserRegisterForm(UserCreationForm):
-    first_name = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4', 'placeholder': 'Введите имя'}))
-    last_name = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4', 'placeholder': 'Введите фамилию'}))
-    username = forms.CharField(widget=forms.TextInput(attrs={
-        'class': 'form-control py-4', 'placeholder': 'Введите имя пользователя'}), required=True)
-    password1 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control py-4', 'placeholder': 'Введите пароль'}), required=True, )
-    password2 = forms.CharField(widget=forms.PasswordInput(attrs={
-        'class': 'form-control py-4', 'placeholder': 'Подтвердите пароль'}))
-    email = forms.EmailField(widget=forms.EmailInput(attrs={
-        'class': 'form-control py-4', 'placeholder': 'Введите адрес эл. почты'}), required=False)
+class ShopUserRegisterForm(AdmUserCreationForm):
     age = forms.IntegerField(widget=forms.NumberInput(attrs={
         'class': 'form-control py-4', 'placeholder': 'Введите Ваш возраст'}), required=True)
-    avatar = forms.ImageField(widget=forms.FileInput(attrs={
-        'class': 'form-control py-4', 'placeholder': 'Загрузите аватар'}), required=False)
 
     class Meta:
         model = ShopUser
