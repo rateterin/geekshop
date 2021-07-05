@@ -1,3 +1,8 @@
 from django.contrib import admin
+from authapp.models import ShopUser
+from baskets.admin import AdminBaskets
 
-# Register your models here.
+
+@admin.register(ShopUser)
+class AdminUser(admin.ModelAdmin):
+    inlines = (AdminBaskets,)
