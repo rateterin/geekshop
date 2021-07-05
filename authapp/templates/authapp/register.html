@@ -3,7 +3,7 @@
 {% block errors %}
     {% for field, errors in form.errors.items %}
         {% for error in errors %}
-        {{ error|escape }}
+        {{ field }}&nbsp;-&nbsp;{{ error }}
         {% endfor %}
     {% endfor %}
 {% endblock %}
