@@ -4,7 +4,6 @@ from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from baskets.models import Basket
-from functools import reduce
 
 
 def login(request):
