@@ -1,4 +1,4 @@
-from django.contrib.auth.forms import AuthenticationForm, UserChangeForm
+from django.contrib.auth.forms import AuthenticationForm, UserChangeForm, UserCreationForm
 from adm.forms import AdmUserCreationForm
 from django import forms
 
