@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from products.models import Category, Product
-
+from authapp.models import ShopUser
+from django.views.generic import View, ListView, FormView
 
 import json
+
 
 # Create your views here.
 
@@ -13,16 +16,24 @@ def home(request):
     })
 
 
-def products(request, cid=None):
-    if not cid:
+def products(request, pk=None, page=1):
+    if not pk:
         goods = Product.objects.all()
     else:
-        goods = Product.objects.filter(category=cid)
+        goods = Product.objects.filter(category=pk)
     categories = Category.objects.all()
+
+    paginator = Paginator(goods, 2)
+    try:
+        products_paginator = paginator.page(page)
+    except PageNotAnInteger:
+        products_paginator = paginator.page(1)
+    except EmptyPage:
+        products_paginator = paginator.page(paginator.num_pages)
 
     return render(request, 'products/products.html', context={
         'head': {'descr': '', 'author': '', 'title': ' - Каталог', 'custom_css': 'css/products.css'},
-        'products': goods,
+        'products': products_paginator,
         'categories': categories,
-        'selected_category': cid or 0
+        'selected_category': pk or 0
     })
