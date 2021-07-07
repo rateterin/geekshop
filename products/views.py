@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from products.models import Category, Product
-
+from authapp.models import ShopUser
+from django.views.generic import View, ListView, FormView
 
 import json
+
 
 # Create your views here.
 

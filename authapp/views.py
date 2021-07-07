@@ -2,9 +2,9 @@ from django.shortcuts import render, HttpResponseRedirect
 from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserProfileForm
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from baskets.models import Basket
-from functools import reduce
+from django.views.generic.edit import CreateView
 
 
 def login(request):
@@ -32,6 +32,12 @@ def login(request):
 def logout(request):
     auth.logout(request)
     return HttpResponseRedirect(reverse('home'))
+
+
+# class UserRegisterView(CreateView):
+#     form_class = ShopUserRegisterForm
+#     template_name = 'authapp/register.html'
+#     success_url = reverse_lazy('authapp:login')
 
 
 def register(request):
