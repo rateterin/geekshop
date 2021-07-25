@@ -1,5 +1,7 @@
 .idea
 /media/
+/static/
+/staticfiles/
 
 .idea/
 
@@ -13,6 +15,7 @@ __pycache__/
 local_settings.py
 db.sqlite3
 media
+static
 
 ### Linux ###
 *~

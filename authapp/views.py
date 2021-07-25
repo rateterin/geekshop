@@ -1,8 +1,8 @@
 from django.shortcuts import render, HttpResponseRedirect
 
 from django.conf import settings
-from django.core.mail import send_mail, EmailMessage
-from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserProfileForm
+from django.core.mail import EmailMessage
+from authapp.forms import ShopUserLoginForm, ShopUserRegisterForm, ShopUserProfileForm, ShopUserProfileExtraForm
 from authapp.models import ShopUser
 from django.contrib import auth, messages
 from django.contrib.auth.decorators import login_required
@@ -12,6 +12,7 @@ from products.context_processors import set_head as head
 from django.utils.timezone import now
 from django.core.exceptions import ObjectDoesNotExist
 from django.views.generic.edit import CreateView
+from django.db import transaction
 
 
 def send_activation_code(user):
@@ -37,7 +38,7 @@ def send_activation_code(user):
 def verify(request, email, activation_key):
     try:
         user = ShopUser.objects.get(email=email, activation_key=activation_key)
-    except ObjectDoesNotExist as e:
+    except ObjectDoesNotExist:
         user = None
     if user:
         if user.activation_key_expires >= now() and not user.is_active:
@@ -59,7 +60,7 @@ def login(request):
             password = request.POST['password']
             user = auth.authenticate(username=username, password=password)
             if user and user.is_active:
-                auth.login(request, user)
+                auth.login(request, user, backend='django.contrib.auth.backends.ModelBackend')
                 return HttpResponseRedirect(reverse('home'))
     else:
         login_form = ShopUserLoginForm()
@@ -108,20 +109,24 @@ def register(request):
 
 
 @login_required
+@transaction.atomic
 def profile(request):
     if request.method == 'POST':
-        profile_form = ShopUserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
-        if profile_form.is_valid():
-            profile_form.save()
+        user_form = ShopUserProfileForm(data=request.POST, files=request.FILES, instance=request.user)
+        profile_form = ShopUserProfileExtraForm(request.POST, request.FILES, instance=request.user.shopuserprofile)
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
             return HttpResponseRedirect(reverse('authapp:profile'))
     else:
-        profile_form = ShopUserProfileForm(instance=request.user)
+        user_form = ShopUserProfileForm(instance=request.user)
+        profile_form = ShopUserProfileExtraForm(instance=request.user.shopuserprofile)
 
     baskets = Basket.objects.filter(user=request.user)
     head.update(title=' - Профиль', custom_css='css/profile.css')
     context = {
         'div_wrap_class': 'col-lg-7',
-        'form': profile_form,
-        'baskets': Basket.objects.filter(user=request.user),
+        'form': user_form,
+        'form2': profile_form,
+        'baskets': baskets,
     }
     return render(request, 'authapp/profile.html', context=context)
