@@ -43,9 +43,17 @@
                 </li>
                 {% else %}
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'authapp:profile' %}">{{ user.username }}
-                        <i class="fas fa-user-circle"></i>
-                    </a>
+                    <div class="dropdown">
+                        <a class="nav-link btn dropdown-toggle" href="#" role="button"
+                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{ user.username }}
+                            <i class="fas fa-user-circle"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item active" href="{% url 'authapp:profile' %}">Профиль</a></li>
+                            <li><a class="dropdown-item" href="{% url 'ordersapp:orders_list' %}">Заказы</a></li>
+                        </ul>
+                    </div>
                 </li>
                 {% if user.is_staff %}
                 <li class="nav-item">

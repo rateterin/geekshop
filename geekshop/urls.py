@@ -30,6 +30,7 @@ urlpatterns = [
     path('auth/', include('authapp.urls', namespace='authapp')),
     path('baskets/', include('baskets.urls', namespace='baskets')),
     path('adm/', include('adm.urls', namespace='adm')),
+    path('orders/', include('ordersapp.urls', namespace='orders')),
     path('', include('social_django.urls', namespace='social')),
 ]
 
@@ -37,4 +38,5 @@ if not settings.DEBUG:
     if settings.MEDIA_ROOT and settings.STATIC_ROOT:
         urlpatterns += url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
         urlpatterns += url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
-        # urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+else:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
