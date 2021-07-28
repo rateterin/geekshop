@@ -14,8 +14,12 @@
     <!-- Bootstrap core CSS -->
     <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
     <!-- Custom styles for this template -->
-    <link href="{% static head.custom_css %}" rel="stylesheet">
+    {% if head.custom_css %}
+        <link href="{% static head.custom_css %}" rel="stylesheet">
+    {% endif %}
 </head>
 {% endblock %}
 
@@ -79,8 +83,10 @@
 </nav>
 {% endblock %}
 
+<div class="content">
 {% block content %}
 {% endblock %}
+</div>
 
 {% block footer %}
 <!-- Footer -->

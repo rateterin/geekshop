@@ -7,6 +7,7 @@ from django.forms import inlineformset_factory
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 
+from products.context_processors import set_head as head
 from baskets.models import Basket
 from ordersapp.models import Order, OrderItem
 from ordersapp.forms import OrderItemForm
@@ -16,6 +17,7 @@ class OrderList(ListView):
     model = Order
 
     def get_queryset(self):
+        head.update(title=' - Список заказов', custom_css='')
         return Order.objects.filter(user=self.request.user)
 
 
@@ -44,6 +46,7 @@ class OrderItemsCreate(CreateView):
                 formset = order_form_set()
 
         data['orderitems'] = formset
+        head.update(title=' - Создание заказа', custom_css='')
         return data
 
     def form_valid(self, form):
@@ -78,6 +81,7 @@ class OrderItemsUpdate(UpdateView):
             data['orderitems'] = order_form_set(self.request.POST, isinstance=self.object)
         else:
             data['orderitems'] = order_form_set(isinstance=self.object)
+        head.update(title=' - Редактирование заказа', custom_css='')
         return data
 
     def form_valid(self, form):
@@ -107,7 +111,7 @@ class OrderRead(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super(OrderRead, self).get_context_data(**kwargs)
-        context['title'] = 'заказ/просмотр'
+        head.update(title=' - Просмотр заказа', custom_css='')
         return context
 
 
