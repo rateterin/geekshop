@@ -73,3 +73,7 @@ class OrderItem(models.Model):
 
     def get_product_cost(self):
         return self.product.price * self.quantity
+
+    @staticmethod
+    def get_item(pk=0):
+        return OrderItem.objects.get(id=pk)
