@@ -1,6 +1,7 @@
 from django.shortcuts import get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.db import transaction
+from django.http import JsonResponse
 
 from django.forms import inlineformset_factory
 
@@ -8,6 +9,7 @@ from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
 
 from products.context_processors import set_head as head
+from products.models import Product
 from baskets.models import Basket
 from ordersapp.models import Order, OrderItem
 from ordersapp.forms import OrderItemForm
@@ -96,7 +98,7 @@ class OrderItemsUpdate(UpdateView):
 
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
-        order_form_set = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
+        order_form_set = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=0)
 
         if self.request.POST:
             data['orderitems'] = order_form_set(self.request.POST, instance=self.object)
@@ -145,3 +147,12 @@ def order_forming_complete(request, pk):
     order.status = Order.SENT_TO_PROCEED
     order.save()
     return HttpResponseRedirect(reverse('ordersapp:orders_list'))
+
+
+def get_product_price(request, pk):
+    if request.is_ajax():
+        product = Product.objects.filter(pk=int(pk)).first()
+        if product:
+            return JsonResponse({'price': product.price})
+        else:
+            return JsonResponse({'price': 0})

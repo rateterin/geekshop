@@ -17,6 +17,11 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=8, decimal_places=2)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
+    is_active = models.BooleanField(verbose_name='Опубликован', default=False)
 
     def __str__(self):
-        return f'{self.name} | {self.category.name}'
+        return self.name
+
+    @staticmethod
+    def get_items():
+        return Product.objects.filter(is_active=True).order_by('category', 'name')
