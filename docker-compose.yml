@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+  geekshop_db:
+    image: postgres:latest
+    restart: always
+    env_file:
+      - ./.env
+  geekshop:
+    image: python:latest
+    depends_on:
+      - geekshop_db
+    restart: always
+    env_file:
+      - ./.env
+    volumes:
+      - ./:~/$(DOMAIN_NAME)/
+    entrypoint: ~/$(DOMAIN_NAME)/entrypoint_geekshop.sh
+  nginx:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./:~/$(DOMAIN_NAME)/
+      - ./nginx:/etc/nginx/sites-available/
+    depends_on:
+      - geekshop
+    restart: always
+    enrypoint: ~/$(DOMAIN_NAME)/entrypoint_nginx.sh
+      

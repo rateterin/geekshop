@@ -32,6 +32,7 @@ SECRET_KEY = env.str('SECRET_KEY', '')
 DEBUG = False
 
 
+
 ALLOWED_HOSTS = ['*']
 
 
@@ -108,11 +109,12 @@ DATABASES = {
     # }
 
     'default': {
-            'NAME': 'geekshop',
+            'NAME': env('POSTGRES_DB'),
             'ENGINE': 'django.db.backends.postgresql',
-            'USER': env('DB_PG_USER'),
-            'PASSWORD': env('DB_PG_PASS'),
-            'HOST': 'localhost'
+            'USER': env('POSTGRES_USER'),
+            'PASSWORD': env('POSTGRES_PASS'),
+            'HOST': env('DB_HOST'),
+            'PORT': env('DB_PORT'),
         }
 }
 
@@ -178,9 +180,9 @@ LOGIN_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DOMAIN_NAME = 'http://localhost:8000'
+SITE_URL = f'{env("HTTP")}://{env("DOMAIN_NAME")}'
 
-EMAIL_HOST = 'mail.geekshop.ter52.ru'
+EMAIL_HOST = 'mail.ter52.ru'
 EMAIL_PORT = '465'
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')

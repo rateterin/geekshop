@@ -18,7 +18,7 @@ from django.db import transaction
 def send_activation_code(user):
     verify_link = reverse('authapp:activation_verify', args=(user.email, user.activation_key))
     title = f'Активация учетной записи на сайте {settings.DOMAIN_NAME}'
-    message = f'Для активации учетной записи {user.username} на сайте {settings.DOMAIN_NAME} перейдите по ссылке: ' \
+    message = f'Для активации учетной записи {user.username} на сайте {settings.SITE_URL} перейдите по ссылке: ' \
               f'\n{settings.DOMAIN_NAME}{verify_link}'
     # Note: send_mail
     # The API for this method is frozen.
