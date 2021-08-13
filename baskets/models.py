@@ -23,8 +23,12 @@ class Basket(models.Model):
 
     @property
     def total(self):
-        return reduce(lambda a, b: a + b, [basket.quantity for basket in self.baskets], 0)
+        return sum([basket.quantity for basket in self.baskets])
 
     @property
     def total_sum(self):
         return sum(basket.sum() for basket in self.baskets)
+
+    @staticmethod
+    def get_item(pk=0):
+        return Basket.objects.get(id=pk)

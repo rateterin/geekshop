@@ -3,24 +3,24 @@
 <html lang="en">
 
 {% block head %}
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta name="description" content="{{ head.descr }}">
-    <meta name="author" content="{{ head.author }}">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="description" content="{{ head.descr }}">
+        <meta name="author" content="{{ head.author }}">
 
-    <title>GeekShop{{ head.title }}</title>
+        <title>GeekShop{{ head.title }}</title>
 
-    <!-- Bootstrap core CSS -->
-    <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+        <!-- Bootstrap core CSS -->
+        <link href="{% static 'vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
 
-    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+        <link href="{% static 'css/style.css' %}" rel="stylesheet">
 
-    <!-- Custom styles for this template -->
-    {% if head.custom_css %}
-        <link href="{% static head.custom_css %}" rel="stylesheet">
-    {% endif %}
-</head>
+        <!-- Custom styles for this template -->
+        {% if head.custom_css %}
+            <link href="{% static head.custom_css %}" rel="stylesheet">
+        {% endif %}
+    </head>
 {% endblock %}
 
 {% block js_top %}
@@ -28,85 +28,92 @@
 
 <body>
 {% block nav %}
-<!-- Navigation -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-    <div class="container">
-        <a class="navbar-brand" href="{% url 'home' %}">GeekShop</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
-                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'products:index' %}">Каталог <i class="fas fa-shopping-bag"></i> </a>
-                </li>
-                {% if not user.is_authenticated %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'authapp:login' %}">Войти <i class="fas fa-sign-in-alt"></i></a>
-                </li>
-                {% else %}
-                <li class="nav-item">
-                    <div class="dropdown">
-                        <a class="nav-link btn dropdown-toggle" href="#" role="button"
-                           id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{ user.username }}
-                            <i class="fas fa-user-circle"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
-                            <li><a class="dropdown-item active" href="{% url 'authapp:profile' %}">Профиль</a></li>
-                            <li><a class="dropdown-item" href="{% url 'ordersapp:orders_list' %}">Заказы</a></li>
-                        </ul>
-                    </div>
-                </li>
-                {% if user.is_staff %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'adm:index' %}">
-                        <i class="fas fa-users-cog"></i>
-                    </a>
-                </li>
-                {% endif %}
-                {% if user.is_superuser %}
-                <li class="nav-item">
-                    <a class="nav-link" href="/admin/">
-                        <i class="fas fa-users-cog"></i>
-                    </a>
-                </li>
-                {% endif %}
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'authapp:logout' %}">Выйти <i class="fas fa-sign-out-alt"></i></a>
-                </li>
-                {% endif %}
-            </ul>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="{% url 'home' %}">GeekShop</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+                    aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'products:index' %}">Каталог <i
+                                class="fas fa-shopping-bag"></i> </a>
+                    </li>
+                    {% if not user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'authapp:login' %}">Войти <i
+                                    class="fas fa-sign-in-alt"></i></a>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <div class="dropdown">
+                                <a class="nav-link btn dropdown-toggle" href="#" role="button"
+                                   id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                    {{ user.username }}
+                                    <i class="fas fa-user-circle"></i>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item active" href="{% url 'authapp:profile' %}">Профиль</a>
+                                    </li>
+                                    <li><a class="dropdown-item" href="{% url 'ordersapp:orders_list' %}">Заказы</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </li>
+                        {% if user.is_staff %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{% url 'adm:index' %}">
+                                    <i class="fas fa-users-cog"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                            <li class="nav-item">
+                                <a class="nav-link" href="/admin/">
+                                    <i class="fas fa-users-cog"></i>
+                                </a>
+                            </li>
+                        {% endif %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'authapp:logout' %}">Выйти <i
+                                    class="fas fa-sign-out-alt"></i></a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
 {% endblock %}
 
 <div class="content">
-{% block content %}
-{% endblock %}
+    {% block content %}
+    {% endblock %}
 </div>
 
 {% block footer %}
-<!-- Footer -->
-<footer class="py-5 bg-dark">
-    <div class="container">
-        <p class="m-0 text-center text-white">Copyright &copy; GeekShop 2021</p>
-    </div>
-    <!-- /.container -->
-</footer>
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; GeekShop 2021</p>
+        </div>
+        <!-- /.container -->
+    </footer>
 {% endblock %}
 
 {% block js_bottom %}
-<!-- Bootstrap core JavaScript -->
-<script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
-<script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+    <!-- Bootstrap core JavaScript -->
+    <script src="{% static 'vendor/jquery/jquery.min.js' %}"></script>
+    <!-- django-dynamic-formset -->
+    <script src="{% static 'js/jquery.formset.js' %}"></script>
+    <script src="{% static 'vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
 
-<!-- FontAwesome script -->
-<script src="{% static 'vendor/fontawesome/fontawesome-icons.js' %}" crossorigin="anonymous"></script>
-<!-- ajax for basket -->
-<script src="{% static 'js/basket_ajax.js' %}"></script>
+    <!-- FontAwesome script -->
+    <script src="{% static 'vendor/fontawesome/fontawesome-icons.js' %}" crossorigin="anonymous"></script>
+    <!-- ajax for basket -->
+    <script src="{% static 'js/basket_ajax.js' %}"></script>
 {% endblock %}
 </body>
 </html>

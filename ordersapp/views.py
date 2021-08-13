@@ -11,6 +11,26 @@ from products.context_processors import set_head as head
 from baskets.models import Basket
 from ordersapp.models import Order, OrderItem
 from ordersapp.forms import OrderItemForm
+from django.dispatch import receiver
+from django.db.models.signals import pre_save, pre_delete
+
+
+@receiver(pre_save, sender=OrderItem)
+@receiver(pre_save, sender=Basket)
+def product_quantity_update_save(sender, update_fields, instance, **kwargs):
+    if update_fields is 'quantity' or 'product':
+        if instance.pk:
+            instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity
+        else:
+            instance.product.quantity -= instance.quantity
+        instance.product.save()
+
+
+@receiver(pre_delete, sender=OrderItem)
+@receiver(pre_delete, sender=Basket)
+def product_quantity_update_delete(sender, instance, **kwargs):
+    instance.product.quantity += instance.quantity
+    instance.product.save()
 
 
 class OrderList(ListView):
@@ -41,6 +61,7 @@ class OrderItemsCreate(CreateView):
                 for num, form in enumerate(formset.forms):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
+                    form.initial['price'] = basket_items[num].product.price
                 basket_items.delete()
             else:
                 formset = order_form_set()
@@ -78,9 +99,13 @@ class OrderItemsUpdate(UpdateView):
         order_form_set = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
 
         if self.request.POST:
-            data['orderitems'] = order_form_set(self.request.POST, isinstance=self.object)
+            data['orderitems'] = order_form_set(self.request.POST, instance=self.object)
         else:
-            data['orderitems'] = order_form_set(isinstance=self.object)
+            formset = order_form_set(instance=self.object)
+            for form in formset.forms:
+                if form.instance.pk:
+                    form.initial['price'] = form.instance.product.price
+            data['orderitems'] = formset
         head.update(title=' - Редактирование заказа', custom_css='')
         return data
 
