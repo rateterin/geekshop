@@ -1,9 +1,13 @@
 .idea
-/media/
+/media/*
+!/media/products_images/
+!/media/users_avatars/
 /static/
 /staticfiles/
 
 .idea/
+
+*/migrations/*
 
 # Created by https://www.gitignore.io/api/macos,linux,django,python,pycharm
 

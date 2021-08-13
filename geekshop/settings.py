@@ -112,7 +112,7 @@ DATABASES = {
             'NAME': env('POSTGRES_DB'),
             'ENGINE': 'django.db.backends.postgresql',
             'USER': env('POSTGRES_USER'),
-            'PASSWORD': env('POSTGRES_PASS'),
+            'PASSWORD': env('POSTGRES_PASSWORD'),
             'HOST': env('DB_HOST'),
             'PORT': env('DB_PORT'),
         }
@@ -158,9 +158,6 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 
-STATICFILES_DIRS = (
-    BASE_DIR / 'static',
-)
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
