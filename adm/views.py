@@ -2,6 +2,7 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.contrib import messages
 from authapp.models import ShopUser
+from products.context_processors import set_head as head
 from adm.forms import AdmUserCreationForm, AdmUserUpdateForm
 from django.contrib.auth.decorators import user_passes_test
 from django.views.generic.list import ListView
@@ -24,7 +25,8 @@ class AdmUserReadView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({'head': {'descr': '', 'author': '', 'title': ' - Админка | список пользователей'}})
+        head['title'] = ' - Админка | список пользователей'
+        # context.update({'head': {'descr': '', 'author': '', 'title': ' - Админка | список пользователей'}})
         return context
 
 
@@ -40,7 +42,8 @@ class AdmUserCreateView(CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({'head': {'descr': '', 'author': '', 'title': ' - Админка | создание пользователя'}})
+        head['title'] = ' - Админка | создание пользователя'
+        # context.update({'head': {'descr': '', 'author': '', 'title': ' - Админка | создание пользователя'}})
         return context
 
 
@@ -56,7 +59,8 @@ class AdmUserUpdateView(UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context.update({'head': {'descr': '', 'author': '', 'title': ' - Профиль', 'custom_css': 'css/profile.css'}})
+        head.update(title=' - Профиль', custom_css='css/profile.css')
+        # context.update({'head': {'descr': '', 'author': '', 'title': ' - Профиль', 'custom_css': 'css/profile.css'}})
         return context
 
 

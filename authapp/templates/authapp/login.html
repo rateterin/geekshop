@@ -1,10 +1,5 @@
 {% extends 'authapp/base.html' %}
 {% load static %}
-{% block errors %}
-{% for error in form.non_field_errors %}
-    {{ error }}
-{% endfor %}
-{% endblock %}
 {% block form %}
     <form class="form-horizontal" action="{% url 'authapp:login' %}" method="post">
         {% csrf_token %}

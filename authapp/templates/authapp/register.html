@@ -1,12 +1,5 @@
 {% extends 'authapp/base.html' %}
 {% load static %}
-{% block errors %}
-    {% for field, errors in form.errors.items %}
-        {% for error in errors %}
-        {{ field }}&nbsp;-&nbsp;{{ error }}
-        {% endfor %}
-    {% endfor %}
-{% endblock %}
 {% block form %}
     <form class="form-horizontal" action="{% url 'authapp:register' %}"
           method="post" enctype="multipart/form-data">
