@@ -14,17 +14,14 @@ services:
     env_file:
       - ./.env
     volumes:
-      - ./:~/$(DOMAIN_NAME)/
-    entrypoint: ~/$(DOMAIN_NAME)/entrypoint_geekshop.sh
+      - ./:/var/www/${DOMAIN_NAME}/
+    entrypoint: /var/www/${DOMAIN_NAME}/entrypoint_geekshop.sh
   nginx:
     image: nginx:latest
     ports:
       - "80:80"
     volumes:
-      - ./:~/$(DOMAIN_NAME)/
-      - ./nginx:/etc/nginx/sites-available/
+      - ./:/var/www/${DOMAIN_NAME}/
     depends_on:
       - geekshop
     restart: always
-    enrypoint: ~/$(DOMAIN_NAME)/entrypoint_nginx.sh
-      
