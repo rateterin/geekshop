@@ -29,10 +29,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env.str('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -102,10 +103,19 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # }
+
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+            'NAME': env('POSTGRES_DB'),
+            'ENGINE': 'django.db.backends.postgresql',
+            'USER': env('POSTGRES_USER'),
+            'PASSWORD': env('POSTGRES_PASS'),
+            'HOST': env('DB_HOST'),
+            'PORT': env('DB_PORT'),
+        }
 }
 
 
@@ -146,7 +156,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_ROOT = BASE_DIR / 'static'
 
 STATICFILES_DIRS = (
     BASE_DIR / 'static',
@@ -170,9 +180,9 @@ LOGIN_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-DOMAIN_NAME = 'http://localhost:8000'
+SITE_URL = f'{env("HTTP")}://{env("DOMAIN_NAME")}'
 
-EMAIL_HOST = 'mail.geekshop.ter52.ru'
+EMAIL_HOST = 'mail.ter52.ru'
 EMAIL_PORT = '465'
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
