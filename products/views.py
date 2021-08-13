@@ -27,7 +27,7 @@ def products(request, pk=None, page=1):
         products_paginator = paginator.page(1)
     except EmptyPage:
         products_paginator = paginator.page(paginator.num_pages)
-    head.update(title=' - Каталог', custom_css='css/products.css')
+    head.update(title=' - Каталог', custom_css='')
     return render(request, 'products/products.html', context={
         'products': products_paginator,
         'categories': categories,
