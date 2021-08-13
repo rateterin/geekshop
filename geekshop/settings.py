@@ -31,10 +31,7 @@ SECRET_KEY = env.str('SECRET_KEY', '')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-
-
 ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -103,19 +100,19 @@ WSGI_APPLICATION = 'geekshop.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': BASE_DIR / 'db.sqlite3',
-    # }
-
     'default': {
-            'NAME': env('POSTGRES_DB'),
-            'ENGINE': 'django.db.backends.postgresql',
-            'USER': env('POSTGRES_USER'),
-            'PASSWORD': env('POSTGRES_PASSWORD'),
-            'HOST': env('DB_HOST'),
-            'PORT': env('DB_PORT'),
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+
+    # 'default': {
+    #         'NAME': env('POSTGRES_DB'),
+    #         'ENGINE': 'django.db.backends.postgresql',
+    #         'USER': env('POSTGRES_USER'),
+    #         'PASSWORD': env('POSTGRES_PASSWORD'),
+    #         'HOST': env('DB_HOST'),
+    #         'PORT': env('DB_PORT'),
+    #     }
 }
 
 
