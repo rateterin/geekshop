@@ -16,7 +16,6 @@ python manage.py migrate
 python manage.py collectstatic --noinput
 echo "from django.contrib.auth import get_user_model; User = get_user_model(); User.objects.create_superuser('django', 'geekshop@ter52.ru', 'geekbrains', age=42)" | python manage.py shell
 python manage.py loaddata db.json
-python manage.py loaddata db.json
 gunicorn --bind 0.0.0.0:8000 -w 3 geekshop.wsgi:application
 
 exec "$@"
