@@ -2,8 +2,6 @@
 /media/*
 !/media/products_images/
 !/media/users_avatars/
-/static/
-/staticfiles/
 
 .idea/
 
