@@ -3,6 +3,8 @@
 cd $(dirname $0)
 pip install --upgrade pip
 pip install --no-cache-dir -r ./requirements.txt
+pip install --no-cache-dir psycopg2-binary
+pip install --no-cache-dir gunicorn
 
 sleep 10
 
