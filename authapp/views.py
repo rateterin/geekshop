@@ -121,7 +121,7 @@ def profile(request):
         user_form = ShopUserProfileForm(instance=request.user)
         profile_form = ShopUserProfileExtraForm(instance=request.user.shopuserprofile)
 
-    baskets = Basket.objects.filter(user=request.user)
+    baskets = Basket.objects.select_related('user', 'product').filter(user=request.user)
     head.update(title=' - Профиль', custom_css='css/profile.css')
     context = {
         'div_wrap_class': 'col-lg-7',
