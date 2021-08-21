@@ -3,7 +3,7 @@
 cd $(dirname $0)
 python3 -m venv ../venv
 . ./../venv/bin/activate
-apt update && apt install graphviz -y
+apt update && apt install graphviz siege -y
 pip install --upgrade pip
 pip install --no-cache-dir wheel
 pip install --no-cache-dir -r ./requirements.txt
