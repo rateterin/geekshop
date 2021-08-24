@@ -1,31 +1,16 @@
-http://localhost:8000/	products.views.home	home
-http://localhost:8000/adm/	adm.views.index	adm:index
-http://localhost:8000/adm/users/	adm.views.AdmUserReadView	adm:users_read
-http://localhost:8000/adm/users/create/	adm.views.AdmUserCreateView	adm:users_create
-http://localhost:8000/adm/users/delete/<int:pk>/	adm.views.AdmUserDeleteView	adm:users_delete
-http://localhost:8000/adm/users/update/<int:pk>/	adm.views.AdmUserUpdateView	adm:users_update
-http://localhost:8000/auth/login/	authapp.views.login	authapp:login
-http://localhost:8000/auth/logout/	authapp.views.logout	authapp:logout
-http://localhost:8000/auth/profile/	authapp.views.profile	authapp:profile
-http://localhost:8000/auth/register/	authapp.views.register	authapp:register
-http://localhost:8000/auth/verify/<email>/<activation_key>	authapp.views.verify	authapp:activation_verify
-http://localhost:8000/baskets/add/<int:product_id>	baskets.views.basket_add	baskets:basket_add
-http://localhost:8000/baskets/edit/<int:id>/<int:quantity>/	baskets.views.basket_edit	baskets:basket_edit
-http://localhost:8000/baskets/remove/<int:id>	baskets.views.basket_remove	baskets:basket_remove
-http://localhost:8000/complete/<backend>/	social_django.views.complete	social:complete
-http://localhost:8000/disconnect/<backend>/	social_django.views.disconnect	social:disconnect
-http://localhost:8000/disconnect/<backend>/<association_id>/	social_django.views.disconnect	social:disconnect_individual
-http://localhost:8000/login/<backend>/	social_django.views.auth	social:begin
-http://localhost:8000/media/<path>	django.views.static.serve
-http://localhost:8000/orders/	ordersapp.views.OrderList	orders:orders_list
-http://localhost:8000/orders/create/	ordersapp.views.OrderItemsCreate	orders:order_create
-http://localhost:8000/orders/delete/<pk>	ordersapp.views.OrderDelete	orders:order_delete
-http://localhost:8000/orders/forming/complete/<pk>	ordersapp.views.order_forming_complete	orders:order_forming_complete
-http://localhost:8000/orders/product/<int:pk>/price/	ordersapp.views.get_product_price	orders:get_product_price
-http://localhost:8000/orders/read/<pk>	ordersapp.views.OrderRead	orders:order_read
-http://localhost:8000/orders/update/<pk>	ordersapp.views.OrderItemsUpdate	orders:order_update
-http://localhost:8000/products/	products.views.products	products:index
-http://localhost:8000/products/<int:pk>/	products.views.products	products:product
-http://localhost:8000/products/category/<int:pk>/	products.views.products	products:category
-http://localhost:8000/products/category/<int:pk>/page/<int:page>/	products.views.products	products:page
-http://localhost:8000/static/<path>	django.views.static.serve
+/
+/products/
+/products/category/2/
+/products/category/3/
+/products/category/4/
+/baskets/add/3/
+/baskets/add/4/
+/baskets/add/5/
+/baskets/add/6/
+/baskets/add/7/
+/baskets/add/8/
+/auth/profile/
+/orders/
+/orders/create/
+/orders/read/9/
+/orders/update/9/

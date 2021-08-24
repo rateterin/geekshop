@@ -57,6 +57,7 @@ class OrderItemsCreate(CreateView):
         order_form_set = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
 
         if self.request.POST:
+            Basket.objects.select_related('user', 'product').filter(user=self.request.user).delete()
             formset = order_form_set(self.request.POST)
         else:
             basket_items = Basket.objects.select_related('user', 'product').filter(user=self.request.user)
@@ -67,7 +68,6 @@ class OrderItemsCreate(CreateView):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
                     form.initial['price'] = basket_items[num].product.price
-                basket_items.delete()
             else:
                 formset = order_form_set()
 
