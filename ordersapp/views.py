@@ -39,7 +39,7 @@ class OrderList(ListView):
 
     def get_queryset(self):
         head.update(title=' - Список заказов', custom_css='')
-        return Order.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user).select_related()
 
     @method_decorator(login_required())
     def dispatch(self, *args, **kwargs):
