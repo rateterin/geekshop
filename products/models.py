@@ -13,9 +13,9 @@ class Category(models.Model):
 
     @cached_property
     def active_products_in_category(self):
-        res = Product.objects.filter(category=self.id).annotate(c=Count('id'))
+        res = list(Product.objects.filter(category=self.id).values('category').annotate(c=Count('category')))
         if res:
-            return res[0]
+            return res[0]['c']
 
 
 class Product(models.Model):
