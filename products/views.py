@@ -13,11 +13,13 @@ def home(request):
     return render(request, 'products/index.html')
 
 
-def products(request, pk=None, page=1):
+def products(request, pk=0, page=1):
     if not pk:
         goods = Product.objects.all().order_by('name')
+        category = None
     else:
         goods = Product.objects.filter(category=pk).order_by('name')
+        category = Category.objects.get(id=pk)
     categories = Category.objects.all()
 
     paginator = Paginator(goods, 3)
@@ -28,8 +30,11 @@ def products(request, pk=None, page=1):
     except EmptyPage:
         products_paginator = paginator.page(paginator.num_pages)
     head.update(title=' - Каталог', custom_css='')
-    return render(request, 'products/products.html', context={
+    context = {
         'products': products_paginator,
         'categories': categories,
-        'selected_category': pk or 0
-    })
+        'selected_category': pk
+    }
+    if category:
+        context.update(products_count=category.active_products_in_category)
+    return render(request, 'products/products.html', context=context)
