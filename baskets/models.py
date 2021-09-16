@@ -19,7 +19,7 @@ class Basket(models.Model):
 
     @property
     def baskets(self):
-        return Basket.objects.filter(user=self.user)
+        return Basket.objects.select_related('user').filter(user=self.user)
 
     @property
     def total(self):

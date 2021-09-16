@@ -43,8 +43,8 @@ def verify(request, email, activation_key):
     if user:
         if user.activation_key_expires >= now() and not user.is_active:
             messages.success(request, 'Ваша учетная запись успешно активирована.')
-            user.is_active = True
-            user.save()
+            user.update(is_active=True)
+            # user.save()
         else:
             messages.warning(request, 'Учетная запись не активирована!')
     else:

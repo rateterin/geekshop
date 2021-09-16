@@ -13,7 +13,8 @@ class Category(models.Model):
 
     @cached_property
     def active_products_in_category(self):
-        res = list(Product.objects.filter(category=self.id).values('category').annotate(c=Count('category')))
+        res = list(
+            Product.objects.select_related().filter(category=self.id).values('category').annotate(c=Count('category')))
         if res:
             return res[0]['c']
 
@@ -32,4 +33,4 @@ class Product(models.Model):
 
     @staticmethod
     def get_items():
-        return Product.objects.filter(is_active=True).order_by('category', 'name')
+        return Product.objects.select_related().filter(is_active=True).order_by('category', 'name')

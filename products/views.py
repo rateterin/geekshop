@@ -47,11 +47,11 @@ def get_links_menu():
         key = 'links_menu'
         links_menu = cache.get(key)
         if links_menu is None:
-            links_menu = Category.objects.filter(is_active=True)
+            links_menu = Category.objects.select_related().filter(is_active=True)
             cache.set(key, links_menu)
         return links_menu
     else:
-        return Category.objects.filter(is_active=True)
+        return Category.objects.select_related().filter(is_active=True)
 
 
 def get_all_categories():
@@ -119,11 +119,11 @@ def get_products_ordered_by_price():
         key = 'products_ordered_by_price'
         _products = cache.get(key)
         if _products is None:
-            _products = Product.objects.filter(is_active=True).order_by('price')
+            _products = Product.objects.select_related().filter(is_active=True).order_by('price')
             cache.set(key, _products)
         return _products
     else:
-        return Product.objects.filter(is_active=True).order_by('price')
+        return Product.objects.select_related().filter(is_active=True).order_by('price')
 
 
 def get_products_in_category_ordered_by_price(pk):
@@ -131,8 +131,8 @@ def get_products_in_category_ordered_by_price(pk):
         key = f'products_in_category_ordered_by_price_{pk}'
         _products = cache.get(key)
         if _products is None:
-            _products = Product.objects.filter(category__pk=pk, is_active=True).order_by('price')
+            _products = Product.objects.select_related().filter(category__pk=pk, is_active=True).order_by('price')
             cache.set(key, _products)
         return _products
     else:
-        return Product.objects.filter(category__pk=pk, is_active=True).order_by('price')
+        return Product.objects.select_related().filter(category__pk=pk, is_active=True).order_by('price')
