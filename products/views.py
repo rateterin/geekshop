@@ -3,11 +3,37 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import View, ListView, FormView
 from django.conf import settings
 from django.core.cache import cache
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+from django.db.models import F, Q
 
 import json
 from products.models import Category, Product
 from products.context_processors import set_head as head
 from authapp.models import ShopUser
+
+
+@receiver(pre_save, sender=Category)
+@receiver(pre_save, sender=Product)
+def processing_discount_with_product_or_category_save(sender, instance, **kwargs):
+    if instance.pk:
+        if sender == Category:
+            old_discount = 100 - sender.objects.values_list('discount').filter(pk=instance.pk)[0][0]
+            new_discount = 100 - instance.discount
+            discount = new_discount / old_discount
+            instance.product_set.filter(discount=0).update(price=F('price') * discount)
+        if sender == Product:
+            old_product_discount = 100 - sender.objects.values_list('discount').filter(pk=instance.pk)[0][0]
+            old_category_discount = 100
+            old_category_discount -= Category.objects.values_list('discount').filter(pk=instance.category.pk)[0][0]
+            new_product_discount = 100 - instance.discount
+            if not (100 - old_product_discount):
+                discount = new_product_discount / old_category_discount
+            elif not (100 - new_product_discount):
+                discount = old_category_discount / old_product_discount
+            else:
+                discount = new_product_discount / old_product_discount
+            instance.price = float(instance.price) * discount
 
 
 def home(request):
