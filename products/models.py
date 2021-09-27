@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.functional import cached_property
 from django.db.models.aggregates import Count
+from django.db.models import Q
 
 
 class Category(models.Model):
