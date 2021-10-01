@@ -1,4 +1,6 @@
 from django.db import models
+from django.utils.functional import cached_property
+from django.db.models.aggregates import Count
 
 
 class Category(models.Model):
@@ -8,6 +10,12 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
+
+    @cached_property
+    def active_products_in_category(self):
+        res = list(Product.objects.filter(category=self.id).values('category').annotate(c=Count('category')))
+        if res:
+            return res[0]['c']
 
 
 class Product(models.Model):

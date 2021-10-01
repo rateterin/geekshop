@@ -2,6 +2,9 @@
 {%load static %}
 
 {% block content %}
+    {% if products_count %}
+        Active Products in this Category: {{ products_count }}
+    {% endif %}
 <!-- Page Content -->
 <div class="container">
 
