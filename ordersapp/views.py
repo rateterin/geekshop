@@ -2,12 +2,11 @@ from django.shortcuts import get_object_or_404, HttpResponseRedirect
 from django.urls import reverse, reverse_lazy
 from django.db import transaction
 from django.http import JsonResponse
-
+from django.utils.decorators import method_decorator
+from django.contrib.auth.decorators import login_required
 from django.forms import inlineformset_factory
-
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView
 from django.views.generic.detail import DetailView
-
 from products.context_processors import set_head as head
 from products.models import Product
 from baskets.models import Basket
@@ -40,7 +39,11 @@ class OrderList(ListView):
 
     def get_queryset(self):
         head.update(title=' - Список заказов', custom_css='')
-        return Order.objects.filter(user=self.request.user)
+        return Order.objects.filter(user=self.request.user).select_related()
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class OrderItemsCreate(CreateView):
@@ -54,9 +57,10 @@ class OrderItemsCreate(CreateView):
         order_form_set = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=1)
 
         if self.request.POST:
+            Basket.objects.select_related('user', 'product').filter(user=self.request.user).delete()
             formset = order_form_set(self.request.POST)
         else:
-            basket_items = Basket.objects.filter(user=self.request.user)
+            basket_items = Basket.objects.select_related('user', 'product').filter(user=self.request.user)
             if len(basket_items):
                 order_form_set = inlineformset_factory(Order, OrderItem, form=OrderItemForm, extra=len(basket_items))
                 formset = order_form_set()
@@ -64,7 +68,6 @@ class OrderItemsCreate(CreateView):
                     form.initial['product'] = basket_items[num].product
                     form.initial['quantity'] = basket_items[num].quantity
                     form.initial['price'] = basket_items[num].product.price
-                basket_items.delete()
             else:
                 formset = order_form_set()
 
@@ -88,6 +91,10 @@ class OrderItemsCreate(CreateView):
             self.object.delete()
 
         return super().form_valid(form)
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class OrderItemsUpdate(UpdateView):
@@ -127,10 +134,18 @@ class OrderItemsUpdate(UpdateView):
 
         return super().form_valid(form)
 
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
+
 
 class OrderDelete(DeleteView):
     model = Order
     success_url = reverse_lazy('ordersapp:orders_list')
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 class OrderRead(DetailView):
@@ -140,6 +155,10 @@ class OrderRead(DetailView):
         context = super(OrderRead, self).get_context_data(**kwargs)
         head.update(title=' - Просмотр заказа', custom_css='')
         return context
+
+    @method_decorator(login_required())
+    def dispatch(self, *args, **kwargs):
+        return super().dispatch(*args, **kwargs)
 
 
 def order_forming_complete(request, pk):

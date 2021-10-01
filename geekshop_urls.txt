@@ -1,0 +1,11 @@
+http://geekshop.ter52.ru/
+http://geekshop.ter52.ru/products/
+http://geekshop.ter52.ru/products/category/2/
+http://geekshop.ter52.ru/products/category/3/
+http://geekshop.ter52.ru/products/category/4/
+http://geekshop.ter52.ru/baskets/add/3/
+http://geekshop.ter52.ru/baskets/add/4/
+http://geekshop.ter52.ru/baskets/add/5/
+http://geekshop.ter52.ru/baskets/add/6/
+http://geekshop.ter52.ru/baskets/add/7/
+http://geekshop.ter52.ru/baskets/add/8/
