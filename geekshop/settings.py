@@ -29,7 +29,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = env.str('SECRET_KEY', '')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+LOCAL = env.bool('LOCAL')
 
 ALLOWED_HOSTS = ['*']
 
@@ -178,13 +179,14 @@ LOGIN_REDIRECT_URL = '/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-SITE_URL = f'{env("HTTP")}://{env("DOMAIN_NAME")}'
+DOMAIN_NAME = env('DOMAIN_NAME')
+# SITE_URL = f'{env("HTTP")}://{env("DOMAIN_NAME")}'
 
 EMAIL_HOST = 'mail.ter52.ru'
 EMAIL_PORT = '465'
+EMAIL_USE_SSL = True
 EMAIL_HOST_USER = env.str('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
-EMAIL_USE_SSL = True
 
 SOCIAL_AUTH_VK_OAUTH2_KEY = env('VK_KEY')
 SOCIAL_AUTH_VK_OAUTH2_SECRET = env('VK_SECRET')

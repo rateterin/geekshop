@@ -20,11 +20,12 @@ from django.db.models.signals import pre_save, pre_delete
 @receiver(pre_save, sender=OrderItem)
 @receiver(pre_save, sender=Basket)
 def product_quantity_update_save(sender, update_fields, instance, **kwargs):
-    if instance.pk:
-        instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity
-    else:
-        instance.product.quantity -= instance.quantity
-    instance.product.save()
+    if sender.objects.filter(pk=instance.pk).exists():
+        if instance.pk:
+            instance.product.quantity -= instance.quantity - sender.get_item(instance.pk).quantity
+        else:
+            instance.product.quantity -= instance.quantity
+        instance.product.save()
 
 
 @receiver(pre_delete, sender=OrderItem)

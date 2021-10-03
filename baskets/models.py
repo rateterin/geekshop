@@ -1,8 +1,8 @@
 from django.db import models
+from django.http import Http404
 
 from authapp.models import ShopUser
 from products.models import Product
-from functools import reduce
 
 
 class Basket(models.Model):
@@ -31,4 +31,9 @@ class Basket(models.Model):
 
     @staticmethod
     def get_item(pk=0):
-        return Basket.objects.get(id=pk)
+        try:
+            basket = Basket.objects.get(id=pk)
+        except Basket.DoesNotExist:
+            raise Http404
+        else:
+            return basket

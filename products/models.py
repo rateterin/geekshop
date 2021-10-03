@@ -33,7 +33,7 @@ class Product(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=8, decimal_places=2, default=0)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    is_active = models.BooleanField(verbose_name='Опубликован', default=False, db_index=True)
+    is_active = models.BooleanField(verbose_name='Опубликован', default=True, db_index=True)
     discount = models.PositiveSmallIntegerField(choices=DISCOUNT_CHOICES, default=0)
 
     def __str__(self):

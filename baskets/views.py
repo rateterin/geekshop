@@ -11,14 +11,10 @@ from baskets.models import Basket
 @login_required
 def basket_add(request, product_id):
     product = Product.objects.get(id=product_id)
-    baskets = Basket.objects.select_related('user', 'product').filter(user=request.user, product=product)
-
-    if not baskets.exists():
+    if not Basket.objects.select_related().filter(user=request.user, product=product).exists():
         Basket.objects.create(user=request.user, product=product, quantity=1)
     else:
-        basket = baskets.first()
-        basket.quantity = F('quantity') + 1
-        # basket.save()
+        Basket.objects.select_related().filter(user=request.user, product=product).update(quantity=F('quantity') + 1)
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
 
@@ -31,10 +27,8 @@ def basket_remove(request, id):
 @login_required
 def basket_edit(request, id, quantity):
     if request.is_ajax():
-        basket = Basket.objects.get(id=id)
         if quantity >= 1:
-            basket.update(quantity=quantity)
-            # basket.save()
+            Basket.objects.filter(id=id).update(quantity=quantity)
         baskets = Basket.objects.select_related('user').filter(user=request.user)
         context = {'baskets': baskets}
         result = render_to_string('baskets/baskets.html', context)

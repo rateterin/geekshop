@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic import View, ListView, FormView
+from django.http import Http404
 from django.conf import settings
 from django.core.cache import cache
 from django.db.models.signals import pre_save
@@ -18,12 +19,18 @@ from authapp.models import ShopUser
 def processing_discount_with_product_or_category_save(sender, instance, **kwargs):
     if instance.pk:
         if sender == Category:
-            old_discount = 100 - sender.objects.values_list('discount').filter(pk=instance.pk)[0][0]
+            if sender.objects.filter(pk=instance.pk).exists():
+                old_discount = 100 - sender.objects.values_list('discount').filter(pk=instance.pk)[0][0]
+            else:
+                old_discount = 100
             new_discount = 100 - instance.discount
             discount = new_discount / old_discount
             instance.product_set.filter(discount=0).update(price=F('price') * discount)
         if sender == Product:
-            old_product_discount = 100 - sender.objects.values_list('discount').filter(pk=instance.pk)[0][0]
+            if sender.objects.filter(pk=instance.pk).exists():
+                old_product_discount = 100 - sender.objects.values_list('discount').filter(pk=instance.pk)[0][0]
+            else:
+                old_product_discount = 100
             old_category_discount = 100
             old_category_discount -= Category.objects.values_list('discount').filter(pk=instance.category.pk)[0][0]
             new_product_discount = 100 - instance.discount
@@ -37,8 +44,18 @@ def processing_discount_with_product_or_category_save(sender, instance, **kwargs
 
 
 def home(request):
-    head['custom_css'] = 'css/index.css'
+    head.update(title=' - Главная', custom_css='css/index.css')
     return render(request, 'products/index.html')
+
+
+def product(request, pk=0):
+    if not pk:
+        raise Http404
+    head.update(title=' - Продукт', custom_css='')
+    context = {
+        'product': Product.objects.get(pk=pk)
+    }
+    return render(request, 'products/product.html', context=context)
 
 
 def products(request, pk=0, page=1):

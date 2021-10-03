@@ -1,4 +1,5 @@
-from django.shortcuts import render, HttpResponseRedirect
+import subprocess
+from django.shortcuts import render, HttpResponseRedirect, HttpResponse
 
 from django.conf import settings
 from django.core.mail import EmailMessage
@@ -18,7 +19,7 @@ from django.db import transaction
 def send_activation_code(user):
     verify_link = reverse('authapp:activation_verify', args=(user.email, user.activation_key))
     title = f'Активация учетной записи на сайте {settings.DOMAIN_NAME}'
-    message = f'Для активации учетной записи {user.username} на сайте {settings.SITE_URL} перейдите по ссылке: ' \
+    message = f'Для активации учетной записи {user.username} на сайте {settings.DOMAIN_NAME} перейдите по ссылке: ' \
               f'\n{settings.DOMAIN_NAME}{verify_link}'
     # Note: send_mail
     # The API for this method is frozen.
@@ -29,22 +30,28 @@ def send_activation_code(user):
     #                  from_email=settings.EMAIL_HOST_USER,
     #                  recipient_list=(user.email,),
     #                  fail_silently=False)
-    return EmailMessage(subject=title,
-                        body=message,
-                        from_email=settings.EMAIL_HOST_USER,
-                        to=(user.email,))
+    res = EmailMessage(subject=title,
+                       body=message,
+                       from_email=settings.EMAIL_HOST_USER,
+                       to=(user.email,)).send(False)
+    return res
 
 
 def verify(request, email, activation_key):
-    try:
-        user = ShopUser.objects.get(email=email, activation_key=activation_key)
-    except ObjectDoesNotExist:
-        user = None
-    if user:
-        if user.activation_key_expires >= now() and not user.is_active:
+    user = ShopUser.objects.filter(email=email, activation_key=activation_key)
+    if user.exists():
+        if user[0].activation_key_expires >= now() and not user[0].is_active:
             messages.success(request, 'Ваша учетная запись успешно активирована.')
             user.update(is_active=True)
-            # user.save()
+
+            head.update(title=' - Вход', custom_css='css/auth-admin.css')
+            context = {
+                'div_wrap_class': 'col-lg-5',
+                'h3_title': 'Авторизация',
+                'form': ShopUserLoginForm,
+                'form_link': 'authapp:register',
+                'form_link_text': 'Нужен аккаунт? Зарегистрируйся!'}
+            return render(request, 'authapp/login.html', context=context)
         else:
             messages.warning(request, 'Учетная запись не активирована!')
     else:
@@ -90,12 +97,12 @@ def register(request):
         register_form = ShopUserRegisterForm(data=request.POST, files=request.FILES)
         if register_form.is_valid():
             user = register_form.save()
-            if send_activation_code(user=user).send(False):
+            if send_activation_code(user=user):
                 messages.success(request, f'Вы успешно зарегистрировались!')
                 messages.success(request, f'На указанную почту отправлена ссылка для активации.')
+                return HttpResponseRedirect(reverse('authapp:register'))
             else:
                 messages.warning(request, 'Ошибка отправки ссылки для активации!')
-            return HttpResponseRedirect(reverse('authapp:login'))
     else:
         register_form = ShopUserRegisterForm()
     head.update(title=' - Регистрация', custom_css='css/auth-admin.css')
