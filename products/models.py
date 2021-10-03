@@ -22,6 +22,8 @@ class Category(models.Model):
             Product.objects.select_related().filter(category=self.id).values('category').annotate(c=Count('category')))
         if res:
             return res[0]['c']
+        else:
+            return 0
 
 
 class Product(models.Model):

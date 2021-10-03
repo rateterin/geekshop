@@ -1,5 +1,6 @@
 .idea
 /media/*
+/static
 !/media/products_images/
 !/media/users_avatars/
 
