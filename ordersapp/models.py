@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import F
+from django.http import Http404
 
 from django.conf import settings
 from products.models import Product
@@ -36,11 +38,11 @@ class Order(models.Model):
         verbose_name_plural = 'заказы'
 
     def __str__(self):
-        return 'Текущий заказ: {}'.format(self.id)
+        return f'Текущий заказ: {self.id}'
 
     def get_total_quantity(self):
         items = self.orderitems.select_related()
-        return sum(list(map(lambda x: x.quantity, items)))
+        return sum((item.quantity for item in items))
 
     def get_product_type_quantity(self):
         items = self.orderitems.select_related()
@@ -48,14 +50,14 @@ class Order(models.Model):
 
     def get_total_cost(self):
         items = self.orderitems.select_related()
-        return sum(list(map(lambda x: x.quantity * x.product.price, items)))
-
-        # переопределяем метод, удаляющий объект
+        # return sum(list(map(lambda x: x.quantity * x.product.price, items)))
+        return sum((item.quantity * item.product.price for item in items))
 
     def delete(self):
         for item in self.orderitems.select_related():
-            item.product.quantity += item.quantity
-            item.product.save()
+            # item.product.update(quantity=F('quantity') + item.quantity)
+            Product.objects.filter(pk=item.product.pk).update(quantity=F('quantity') + item.quantity)
+            # item.product.save()
 
         self.is_active = False
         self.save()
@@ -63,8 +65,10 @@ class Order(models.Model):
     def get_summary(self):
         items = self.orderitems.select_related()
         return {
-            'total_cost': sum(list(map(lambda x: x.quantity * x.product.price, items))),
-            'total_quantity': sum(list(map(lambda x: x.quantity, items)))
+            # 'total_cost': sum(list(map(lambda x: x.quantity * x.product.price, items))),
+            # 'total_quantity': sum(list(map(lambda x: x.quantity, items)))
+            'total_cost': sum((item.quantity * item.product.price for item in items)),
+            'total_quantity': sum((item.quantity for item in items))
         }
 
 
@@ -83,4 +87,6 @@ class OrderItem(models.Model):
 
     @staticmethod
     def get_item(pk=0):
-        return OrderItem.objects.get(id=pk)
+        if OrderItem.objects.filter(id=pk).exists():
+            return OrderItem.objects.get(id=pk)
+        raise Http404

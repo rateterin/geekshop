@@ -23,3 +23,16 @@ footer {
   height: 10vh;
   width: auto;
 }
+
+.flex {
+  display: flex;
+}
+
+.space-between {
+  justify-content: space-between;
+}
+
+.category-stick {
+  font-size: smaller;
+  color: #c82333;
+}

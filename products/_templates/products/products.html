@@ -2,9 +2,9 @@
 {%load static %}
 
 {% block content %}
-    {% if products_count %}
-        Active Products in this Category: {{ products_count }}
-    {% endif %}
+{#    {% if products_count %}#}
+{#        Active Products in this Category: {{ products_count }}#}
+{#    {% endif %}#}
 <!-- Page Content -->
 <div class="container">
 
@@ -17,7 +17,10 @@
                 {% for category in categories %}
                     <a href="{% url 'products:category' category.id %}"
                        class="list-group-item{% if selected_category == category.id %} active{% endif %}">
-                        {{ category.name }}
+                        <div class="flex space-between">
+                            <span>{{ category.name }}</span>
+                            <span class="category-stick">{{ category.active_products_in_category }}</span>
+                        </div>
                     </a>
                 {% endfor %}
             </div>
@@ -72,7 +75,9 @@
                             <p class="card-text">{{ product.description }}</p>
                         </div>
                         <div class="card-footer text-center">
-                            <a href="{% url 'baskets:basket_add' product.id %}" class="btn btn-outline-success">Отправить в корзину</a>
+                            <a href="{% url 'baskets:basket_add' product.id %}" class="btn btn-outline-success">
+                                Отправить в корзину
+                            </a>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,41 @@
+{% extends 'products/base.html' %}
+{%load static %}
+
+{% block content %}
+<!-- Page Content -->
+<div class="container">
+
+    <div class="row">
+
+        <div class="col-lg-3">
+
+            <h1 class="my-4">GeekShop</h1>
+            <div class="list-group">
+                {% for category in categories %}
+                    <a href="{% url 'products:category' category.id %}"
+                       class="list-group-item{% if selected_category == category.id %} active{% endif %}">
+                        {{ category.name }}
+                    </a>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!-- /.col-lg-3 -->
+
+        <div class="col-lg-9">
+
+
+            <div class="justify-content-center">
+                <h4>{{ product.name }}</h4>
+                <img style="height: 60vh; width: auto;" src="{{ product.image.url }}" alt="{{ product.name }}" />
+                <h5>{{ product.price }} руб.</h5><a href="{% url 'baskets:basket_add' product.id %}" class="btn btn-outline-success">Отправить в корзину</a>
+                <div class="card-text">{{ product.description }}</div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- /.container -->
+{% endblock %}
