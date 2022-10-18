@@ -7,8 +7,8 @@ from datetime import timedelta
 
 
 class ShopUser(AbstractUser):
-    avatar = models.ImageField(upload_to='users_avatars', blank=True)
-    age = models.PositiveIntegerField(verbose_name='Возраст', null=True, blank=True)
+    avatar = models.ImageField(upload_to="users_avatars", blank=True)
+    age = models.PositiveIntegerField(verbose_name="Возраст", null=True, blank=True)
     activation_key = models.CharField(max_length=128, blank=True)
     activation_key_expires = models.DateTimeField(default=(now() + timedelta(hours=48)))
 
@@ -19,16 +19,16 @@ class ShopUser(AbstractUser):
 
 
 class ShopUserProfile(models.Model):
-    GENDER_CHOICES = (
-        ('', '-'),
-        ('M', 'М'),
-        ('W', 'Ж')
-    )
+    GENDER_CHOICES = (("", "-"), ("M", "М"), ("W", "Ж"))
 
-    user = models.OneToOneField(ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE)
-    tagline = models.CharField(verbose_name='теги', max_length=128, blank=True)
-    about_me = models.TextField(verbose_name='о себе', max_length=512, blank=True)
-    gender = models.CharField(verbose_name='пол', max_length=1, choices=GENDER_CHOICES, blank=True)
+    user = models.OneToOneField(
+        ShopUser, unique=True, null=False, db_index=True, on_delete=models.CASCADE
+    )
+    tagline = models.CharField(verbose_name="теги", max_length=128, blank=True)
+    about_me = models.TextField(verbose_name="о себе", max_length=512, blank=True)
+    gender = models.CharField(
+        verbose_name="пол", max_length=1, choices=GENDER_CHOICES, blank=True
+    )
 
     @receiver(post_save, sender=ShopUser)
     def create_user_profile(sender, instance, created, **kwargs):

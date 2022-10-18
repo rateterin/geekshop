@@ -23,21 +23,26 @@ from django.conf.urls import include
 import products.views as products
 
 urlpatterns = [
-    path('admin/', admin.site.urls, name='admin'),
-
-    path('', products.home, name='home'),
-    path('products/', include('products.urls', namespace='products')),
-    path('auth/', include('authapp.urls', namespace='authapp')),
-    path('baskets/', include('baskets.urls', namespace='baskets')),
-    path('adm/', include('adm.urls', namespace='adm')),
-    path('orders/', include('ordersapp.urls', namespace='orders')),
-    path('', include('social_django.urls', namespace='social')),
+    path("admin/", admin.site.urls, name="admin"),
+    path("", products.home, name="home"),
+    path("products/", include("products.urls", namespace="products")),
+    path("auth/", include("authapp.urls", namespace="authapp")),
+    path("baskets/", include("baskets.urls", namespace="baskets")),
+    path("adm/", include("adm.urls", namespace="adm")),
+    path("orders/", include("ordersapp.urls", namespace="orders")),
+    path("", include("social_django.urls", namespace="social")),
 ]
 
 if not settings.DEBUG:
     if settings.MEDIA_ROOT and settings.STATIC_ROOT:
-        urlpatterns += url(r'^media/(?P<path>.*)$', serve, {'document_root': settings.MEDIA_ROOT}),
-        urlpatterns += url(r'^static/(?P<path>.*)$', serve, {'document_root': settings.STATIC_ROOT}),
+        urlpatterns += (
+            url(r"^media/(?P<path>.*)$", serve, {"document_root": settings.MEDIA_ROOT}),
+        )
+        urlpatterns += (
+            url(
+                r"^static/(?P<path>.*)$", serve, {"document_root": settings.STATIC_ROOT}
+            ),
+        )
 else:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
@@ -45,4 +50,4 @@ else:
 if settings.DEBUG:
     import debug_toolbar
 
-    urlpatterns += [url(r'^__debug__/', include(debug_toolbar.urls))]
+    urlpatterns += [url(r"^__debug__/", include(debug_toolbar.urls))]
