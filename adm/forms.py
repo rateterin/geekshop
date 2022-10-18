@@ -7,5 +7,9 @@ class AdmUserCreationForm(BaseRegisterForm):
 
 
 class AdmUserUpdateForm(ShopUserProfileForm):
-    username = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'readonly': False}))
-    email = forms.CharField(widget=forms.EmailInput(attrs={'class': 'form-control', 'readonly': False}))
+    username = forms.CharField(
+        widget=forms.TextInput(attrs={"class": "form-control", "readonly": False})
+    )
+    email = forms.CharField(
+        widget=forms.EmailInput(attrs={"class": "form-control", "readonly": False})
+    )
