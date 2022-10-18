@@ -7,16 +7,18 @@ import re
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        call_command('makemigrations')
-        call_command('migrate')
+        call_command("makemigrations")
+        call_command("migrate")
 
-        file_list = os.listdir('products/fixtures')
+        file_list = os.listdir("products/fixtures")
         if not file_list:
             return
         file_list.sort()
-        file_list = list(filter(lambda x: re.match('\d{3}_.+\.json$', x), file_list))
+        file_list = list(filter(lambda x: re.match("\d{3}_.+\.json$", x), file_list))
 
         for file in file_list:
-            call_command('loaddata', file[:-5])
+            call_command("loaddata", file[:-5])
 
-        super_user = ShopUser.objects.create_superuser('django', 'django@geekshop.local', 'geekbrains', age=42)
+        super_user = ShopUser.objects.create_superuser(
+            "django", "django@geekshop.local", "geekbrains", age=42
+        )

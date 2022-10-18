@@ -6,7 +6,7 @@ from baskets.admin import AdminBaskets
 class AdminShopUserProfileInline(admin.TabularInline):
     model = ShopUserProfile
     fields = ()
-    verbose_name = 'Профиль'
+    verbose_name = "Профиль"
     extra = 0
 
 
@@ -17,6 +17,7 @@ class AdminShopUserProfile(admin.ModelAdmin):
 
 @admin.register(ShopUser)
 class AdminUser(admin.ModelAdmin):
-    inlines = (AdminShopUserProfileInline, AdminBaskets,)
-
-
+    inlines = (
+        AdminShopUserProfileInline,
+        AdminBaskets,
+    )
